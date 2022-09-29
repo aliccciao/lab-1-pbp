@@ -1,15 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h5>Nama: </h5>
-<b>{{nama}}</b>
-<p>Fill me!</p>
 
-<table>
+<ul class="nav">
+    <li class="nav-item">
+      <a class="nav-link active" href="#">{{nama}}</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'wishlist:logout' %}">Logout</a>
+    </li>
+</ul>
+
+<table class="table table-bordered">
     <tr>
-    <th>Nama Barang</th>
-    <th>Harga Barang</th>
-    <th>Deskripsi</th>
+    <th scope="col">Nama Barang</th>
+    <th scope="col">Harga Barang</th>
+    <th scope="col"></th>Deskripsi</th>
     </tr>
     {% comment %} Tambahkan data di bawah baris ini {% endcomment %}
     {% for barang in list_barang %}
@@ -22,6 +28,6 @@
 </table>
 
 <h5>Sesi terakhir login: {{last_login}}</h5>
-<button><a href="{% url 'wishlist:logout' %}">Logout</a></button>
+{% comment %}<button type="button" class="btn btn-danger"><a href="{% url 'wishlist:logout' %}">Logout</a></button>{% endcomment %}
 
 {% endblock content %}
