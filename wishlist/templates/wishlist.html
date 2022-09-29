@@ -2,7 +2,8 @@
 
 {% block content %}
 
-<ul class="nav">
+<div class="p-3 mb-2 bg-dark text-white">
+  <ul class="nav justify-content-center p-3 mb-2 bg-dark text-white">
     <li class="nav-item">
       <a class="nav-link active" href="#">{{nama}}</a>
     </li>
@@ -13,21 +14,22 @@
 
 <table class="table table-bordered">
     <tr>
-    <th scope="col">Nama Barang</th>
-    <th scope="col">Harga Barang</th>
-    <th scope="col"></th>Deskripsi</th>
+    <th scope="col" class="text-primary">Nama Barang</th>
+    <th scope="col" class="text-primary">Harga Barang</th>
+    <th scope="col" class="text-primary">Deskripsi</th>
     </tr>
     {% comment %} Tambahkan data di bawah baris ini {% endcomment %}
     {% for barang in list_barang %}
     <tr>
-        <th>{{barang.nama_barang}}</th>
-        <th>{{barang.harga_barang}}</th>
-        <th>{{barang.deskripsi}}</th>
+        <th class="text-danger">{{barang.nama_barang}}</th>
+        <th class="text-warning">{{barang.harga_barang}}</th>
+        <th class="text-success">{{barang.deskripsi}}</th>
     </tr>
 {% endfor %}
 </table>
 
-<h5>Sesi terakhir login: {{last_login}}</h5>
+<h5 class="text-justify">Sesi terakhir login: {{last_login}}</h5>
 {% comment %}<button type="button" class="btn btn-danger"><a href="{% url 'wishlist:logout' %}">Logout</a></button>{% endcomment %}
 
+</div>
 {% endblock content %}
