@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+  .table {
+    text-align: center;
+    margin-top: 20px;
+    border-collapse: collapse;
+    background-color: #eae2b7;
+    color: #023047;
+    border: 5px solid #eae2b7;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    max-width: 85vw;
+  }
+</style>
+<div class="p-3 mb-2 bg-dark text-white">
+  <ul class="nav justify-content-center p-3 mb-2 bg-dark text-white">
+    <li class="nav-item">
+      <a class="nav-link active" href="#">{{nama}}</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'wishlist:logout' %}">Logout</a>
+    </li>
+</ul>
+
+<table class = "table">
+  <tr>
+      <th>Nama Barang</th>
+      <th>Harga Barang</th>
+      <th>Deskripsi</th>
+  </tr>
+
+  {% comment %} Tambahkan data di bawah baris ini {% endcomment %}
+  <tbody id="table_data">
+  </tbody>
+</table>
+
+<div class="form d-flex justify-content-center">
+  <div>
+    <h4 style = "text-align: center;">Tambah Baru</h4>
+    <form method="POST" action="">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td>Nama Barang</td>
+                <td><input type="text" id="nama_barang" name="nama_barang" placeholder="Nama Barang" class="form-control">
+                </td>
+            </tr>
+
+            <tr>
+                <td>Harga Barang</td>
+                <td><input type="number" id="harga_barang" name="harga_barang" placeholder="Harga Barang" class="form-control"></td>
+            </tr>
+
+            <tr>
+                <td>Deskripsi</td>
+                <td><textarea class="form-control" id="deskripsi" name="deskripsi"></textarea></td>
+            </tr>
+
+            <tr>
+                <td></td>
+                <td><input class="btn btn-primary" type="submit" value="Submit" id="newBtn"></td>
+            </tr>
+        </table>
+    </form>
+  </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    function postNew(e) {
+        e.preventDefault()
+        const namaBarang = $("#nama_barang").val()
+        const hargaBarang = $("#harga_barang").val()
+        const deskripsi = $("#deskripsi").val()
+
+        const data = {
+            nama_barang: namaBarang,
+            harga_barang: hargaBarang,
+            deskripsi,
+            csrfmiddlewaretoken: "{{ csrf_token }}"
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'wishlist:create_ajax_wishlist' %}",
+            data: data,
+            success: () => {
+                alert("Data berhasil dibuat!")
+                fetchData()
+            },
+            dataType: 'json'
+        });
+    }
+
+    function writeTable(data) {
+        const table = $("#table_data")
+        table.empty()
+        for (let i = 0; i < data.length; i++) {
+            table.append(`
+          <tr>
+            <td>${data[i].fields.nama_barang}</td>
+            <td>${data[i].fields.harga_barang}</td>
+            <td>${data[i].fields.deskripsi}</td>
+          </tr>
+          `)
+        }
+    }
+
+    function fetchData() {
+        $.get("/wishlist/json", writeTable)
+    }
+
+    $(document).ready(() => {
+        $("#newBtn").click(postNew)
+        fetchData()
+    })
+</script>
+{% endblock content %}

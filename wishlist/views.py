@@ -15,7 +15,7 @@ def show_wishlist(request):
     context = {
     'list_barang': data,
     'nama': 'Alicia Kirana',
-    'last_login': request.COOKIES['last_login'],
+    'last_login': request.COOKIES,
 }
     return render(request, "wishlist.html", context)
 
@@ -72,3 +72,34 @@ def logout_user(request):
     response = HttpResponseRedirect(reverse('wishlist:login'))
     response.delete_cookie('last_login')
     return response
+
+
+
+# lab 4
+
+@login_required(login_url='/wishlist/login/')
+def show_ajax(request):
+    context = {
+    'nama': 'Alicia Kirana',
+    'last_login': request.COOKIES,
+}
+    return render(request, "wishlist_ajax.html", context)
+
+def create_ajax_wishlist(request):
+    if request.method == "POST":
+        nama_barang = request.POST.get("nama_barang")
+        harga_barang = request.POST.get("harga_barang")
+        deskripsi = request.POST.get("deskripsi")
+
+        new_barang = BarangWishlist(
+            nama_barang=nama_barang,
+            harga_barang=harga_barang,
+            deskripsi=deskripsi,
+        )
+        new_barang.save()
+        return HttpResponse(
+            serializers.serialize("json", [new_barang]),
+            content_type="application/json",
+        )
+
+    return HttpResponse("Invalid method", status_code=405)
